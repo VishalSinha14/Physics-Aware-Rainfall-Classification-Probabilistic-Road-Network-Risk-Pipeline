@@ -104,7 +104,8 @@ def render_sidebar():
     page = st.sidebar.radio(
         "Navigation",
         ["📊 Overview", "🗺️ Risk Map", "📈 Metrics", "🔬 Uncertainty",
-         "🧪 Phase 6 Validation", "📋 Data Explorer"]
+         "🧪 Phase 6 Validation", "🆚 Model Comparison", "⏱️ Lead-Time",
+         "📋 Data Explorer"]
     )
 
     st.sidebar.markdown("---")
@@ -535,8 +536,202 @@ def main():
         render_uncertainty(roads_gdf, predictions_df)
     elif page == "🧪 Phase 6 Validation":
         render_phase6()
+    elif page == "🆚 Model Comparison":
+        render_model_comparison()
+    elif page == "⏱️ Lead-Time":
+        render_leadtime()
     elif page == "📋 Data Explorer":
         render_data_explorer(roads_gdf, predictions_df)
+
+
+# ================================================================
+# PAGE: MODEL COMPARISON
+# ================================================================
+
+def render_model_comparison():
+    """Logistic Regression vs Ensemble RF comparison."""
+    st.title("🆚 Model Comparison")
+    st.markdown(
+        "**Why this matters:** Comparing Logistic Regression (simple baseline) against "
+        "Ensemble Random Forest proves that the non-linear model adds real scientific value. "
+        "If the baseline were equally good, complex modeling would be unjustified."
+    )
+    st.markdown("---")
+
+    # Load JSON results
+    lr_path  = "results/baselines/lr_results.json"
+    cmp_path = "results/baselines/model_comparison.json"
+
+    if not os.path.exists(cmp_path):
+        st.warning("Run `python src/baselines/train_logistic_regression.py` then `python src/baselines/model_comparison.py` first.")
+        return
+
+    with open(cmp_path) as f:
+        cmp_data = json.load(f)
+
+    # KPI row
+    if os.path.exists(lr_path):
+        with open(lr_path) as f:
+            lr_data = json.load(f)
+        m = lr_data.get("metrics", {})
+        impr = cmp_data.get("improvements_pct", {})
+        st.subheader("Logistic Regression Baseline Metrics")
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("POD",      f"{m.get('POD', 0):.4f}")
+        col2.metric("CSI",      f"{m.get('CSI', 0):.4f}")
+        col3.metric("ROC-AUC",  f"{m.get('ROC_AUC', 0):.4f}")
+        col4.metric("Brier Score", f"{m.get('Brier', 0):.6f}")
+
+        # McNemar test result
+        mc = lr_data.get("mcnemar_vs_ensemble")
+        if mc:
+            st.markdown("---")
+            sig = "✅ YES" if mc.get("significant") else "❌ NO"
+            st.info(f"**McNemar Test** (Ensemble RF vs LR): χ²={mc['statistic']:.4f}, "
+                    f"p={mc['p_value']:.6f} — Statistically significant difference: **{sig}**")
+
+    st.markdown("---")
+
+    # Comparison table from JSON
+    st.subheader("Side-by-Side Metric Comparison")
+    rows = cmp_data.get("comparison", [])
+    if rows:
+        import pandas as pd
+        df = pd.DataFrame(rows)
+        st.dataframe(df.style.highlight_max(
+            subset=[c for c in df.columns if c in ["POD","CSI","ROC-AUC","PR-AUC"]],
+            color="#D5F5E3"
+        ).highlight_min(
+            subset=[c for c in df.columns if c in ["FAR","Brier"]],
+            color="#D5F5E3"
+        ), use_container_width=True)
+
+    st.markdown("---")
+
+    # Comparison plot image
+    st.subheader("Comparison Chart")
+    plot_path = "results/baselines/model_comparison_table.png"
+    if os.path.exists(plot_path):
+        img = Image.open(plot_path)
+        st.image(img, use_container_width=True,
+                 caption="Left: Metric table | Right: Key metrics bar chart (green=best)")
+
+    # LR analysis image
+    lr_plot = "results/baselines/lr_analysis.png"
+    if os.path.exists(lr_plot):
+        st.subheader("Logistic Regression Analysis")
+        img = Image.open(lr_plot)
+        st.image(img, use_container_width=True,
+                 caption="Left: Reliability diagram | Right: ROC curve")
+
+    # PR curves image
+    pr_plot = "results/scientific/pr_curves_comparison.png"
+    if os.path.exists(pr_plot):
+        st.subheader("Precision-Recall Curves (Better than ROC for Imbalanced Data)")
+        img = Image.open(pr_plot)
+        st.image(img, use_container_width=True)
+
+    # Imbalance analysis
+    imb_path = "results/scientific/imbalance_analysis.png"
+    if os.path.exists(imb_path):
+        st.subheader("Class Imbalance Analysis")
+        img = Image.open(imb_path)
+        st.image(img, use_container_width=True,
+                 caption="Why accuracy is misleading — and what metrics to use instead")
+
+        imb_json = "results/scientific/imbalance_report.json"
+        if os.path.exists(imb_json):
+            with open(imb_json) as f:
+                imb = json.load(f)
+            with st.expander("📄 Imbalance Report JSON"):
+                st.json(imb)
+
+
+# ================================================================
+# PAGE: LEAD-TIME FORECASTING
+# ================================================================
+
+def render_leadtime():
+    """Lead-time forecasting degradation page."""
+    st.title("⏱️ Lead-Time Forecasting")
+    st.markdown(
+        "This page shows how model performance **degrades as we predict further into the future**. "
+        "A nowcast (0h) uses recent rainfall — a 30-minute or 60-minute forecast only uses "
+        "atmospheric variables from the current time. The smooth degradation proves the model "
+        "has **genuine predictive skill** (not just pattern-matching)."
+    )
+    st.markdown("---")
+
+    metrics_path = "results/leadtime/leadtime_metrics.json"
+    if not os.path.exists(metrics_path):
+        st.warning("Run `python src/leadtime/train_leadtime_models.py` first.")
+        return
+
+    with open(metrics_path) as f:
+        lead_metrics = json.load(f)
+
+    # KPI table
+    st.subheader("Performance at Each Lead Time")
+    lead_labels = {"0h": "0h (Nowcast)", "30m": "+30 min", "60m": "+60 min"}
+    cols = st.columns(len(lead_metrics))
+    for i, (lead, m) in enumerate(lead_metrics.items()):
+        with cols[i]:
+            st.markdown(f"**{lead_labels.get(lead, lead)}**")
+            st.metric("ROC-AUC", f"{m.get('ROC_AUC', 0):.4f}")
+            st.metric("CSI",     f"{m.get('CSI', 0):.4f}")
+            st.metric("POD",     f"{m.get('POD', 0):.4f}")
+            st.metric("Brier",   f"{m.get('Brier', 0):.5f}")
+
+    st.markdown("---")
+
+    # Degradation curve plot
+    st.subheader("Degradation Curve")
+    deg_path = "results/leadtime/degradation_curve.png"
+    if os.path.exists(deg_path):
+        img = Image.open(deg_path)
+        st.image(img, use_container_width=True,
+                 caption="Performance drops as lead time increases — this is expected and validates the model")
+    else:
+        st.info("Run `python src/leadtime/evaluate_leadtime.py`")
+
+    # Degradation summary
+    deg_sum_path = "results/leadtime/degradation_summary.json"
+    if os.path.exists(deg_sum_path):
+        with open(deg_sum_path) as f:
+            deg_sum = json.load(f)
+        st.markdown("**Key degradation rates (0h → 60m):**")
+        metrics_info = deg_sum.get("metrics", {})
+        cols2 = st.columns(min(len(metrics_info), 5))
+        for i, (mkey, info) in enumerate(metrics_info.items()):
+            vals = info.get("values_by_lead", {})
+            ch   = info.get("total_change_pct", 0)
+            higher_better = info.get("higher_better", True)
+            direction = "📉" if ch > 0 and higher_better else "📈"
+            with cols2[i % 5]:
+                st.metric(mkey, f"{ch:.1f}%", delta=f"{direction} change",
+                          delta_color="inverse" if higher_better else "normal")
+
+    # Reliability comparison for lead times
+    rel_path = "results/scientific/reliability_all_models.png"
+    if os.path.exists(rel_path):
+        st.markdown("---")
+        st.subheader("Reliability Diagrams — All Lead Times")
+        img = Image.open(rel_path)
+        st.image(img, use_container_width=True,
+                 caption="Each panel: predicted probability vs observed frequency. Closer to diagonal = better calibration.")
+
+    # Brier comparison
+    brier_path = "results/scientific/brier_comparison.png"
+    if os.path.exists(brier_path):
+        st.markdown("---")
+        st.subheader("Brier Score Comparison")
+        img = Image.open(brier_path)
+        st.image(img, use_container_width=True,
+                 caption="Brier Score: lower = better probabilistic calibration")
+
+    # Full metrics JSON
+    with st.expander("📄 Full Lead-Time Metrics JSON"):
+        st.json(lead_metrics)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,64 @@
+{
+  "lead_times": [
+    "0h",
+    "30m",
+    "60m"
+  ],
+  "metrics": {
+    "POD": {
+      "values_by_lead": {
+        "0h": 0.9307980049875312,
+        "30m": 0.7306733167082294,
+        "60m": 0.5991271820448878
+      },
+      "total_change": 0.3316708229426434,
+      "total_change_pct": 35.63295378432686,
+      "direction": "decrease",
+      "higher_better": true
+    },
+    "CSI": {
+      "values_by_lead": {
+        "0h": 0.5919904837430611,
+        "30m": 0.27884844158934097,
+        "60m": 0.17969334330590875
+      },
+      "total_change": 0.4122971404371523,
+      "total_change_pct": 69.64590677712647,
+      "direction": "decrease",
+      "higher_better": true
+    },
+    "ROC_AUC": {
+      "values_by_lead": {
+        "0h": 0.9995245593367467,
+        "30m": 0.9921150386692512,
+        "60m": 0.9722425192696188
+      },
+      "total_change": 0.027282040067127866,
+      "total_change_pct": 2.7295017228222362,
+      "direction": "decrease",
+      "higher_better": true
+    },
+    "PR_AUC": {
+      "values_by_lead": {
+        "0h": 0.8052217284636833,
+        "30m": 0.42516280793414774,
+        "60m": 0.22799795709894916
+      },
+      "total_change": 0.5772237713647341,
+      "total_change_pct": 71.68507144808969,
+      "direction": "decrease",
+      "higher_better": true
+    },
+    "Brier": {
+      "values_by_lead": {
+        "0h": 0.0011301646640168243,
+        "30m": 0.0034752747218192324,
+        "60m": 0.005152331824818585
+      },
+      "total_change": -0.004022167160801761,
+      "total_change_pct": -355.8921357978225,
+      "direction": "increase",
+      "higher_better": false
+    }
+  }
+}

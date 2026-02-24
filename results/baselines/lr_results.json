@@ -1,0 +1,51 @@
+{
+  "model": "Logistic Regression",
+  "best_C": 0.1,
+  "metrics": {
+    "POD": 1.0,
+    "FAR": 0.6150707943364531,
+    "CSI": 0.38492920566354694,
+    "ROC_AUC": 0.998915675688323,
+    "PR_AUC": 0.5195983155166829,
+    "Brier": 0.003687724311773236,
+    "TP": 1604,
+    "FP": 2563,
+    "FN": 0,
+    "TN": 681273
+  },
+  "mcnemar_vs_ensemble": null,
+  "coefficients": [
+    {
+      "feature": "t2m_c",
+      "coefficient": 16.202609935971747
+    },
+    {
+      "feature": "wind_speed",
+      "coefficient": -4.067799975303745
+    },
+    {
+      "feature": "sp",
+      "coefficient": -9.604343685846658
+    },
+    {
+      "feature": "swvl1",
+      "coefficient": -14.057220679946399
+    },
+    {
+      "feature": "rain_lag1",
+      "coefficient": -21.44583484799403
+    },
+    {
+      "feature": "rain_lag2",
+      "coefficient": -20.16769114643114
+    },
+    {
+      "feature": "rain_roll3",
+      "coefficient": 60.51398119981978
+    },
+    {
+      "feature": "rain_roll6",
+      "coefficient": 8.624279237932663
+    }
+  ]
+}

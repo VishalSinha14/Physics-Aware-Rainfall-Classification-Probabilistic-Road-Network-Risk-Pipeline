@@ -1,0 +1,27 @@
+{
+  "comparison": [
+    {
+      "Model": "Logistic Regression",
+      "POD": 1.0,
+      "FAR": 0.6150707943364531,
+      "CSI": 0.38492920566354694,
+      "ROC-AUC": 0.998915675688323,
+      "PR-AUC": 0.5195983155166829,
+      "Brier": 0.003687724311773236
+    },
+    {
+      "Model": "Ensemble RF (30-model)",
+      "POD": 0.8796758104738155,
+      "FAR": 0.3014851485148515,
+      "CSI": 0.6375960234975147,
+      "ROC-AUC": NaN,
+      "PR-AUC": NaN,
+      "Brier": NaN
+    }
+  ],
+  "improvements_pct": {
+    "POD": -12.032418952618452,
+    "CSI": 65.63981483255257,
+    "Brier_reduction_pct": NaN
+  }
+}

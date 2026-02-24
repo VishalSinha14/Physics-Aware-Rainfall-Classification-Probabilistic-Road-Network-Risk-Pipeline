@@ -1,0 +1,10 @@
+{
+  "brier_scores": {
+    "Ensemble RF\n(0h)": 0.0008526351966864651,
+    "Ensemble RF\n(30m)": 0.0034752747218192324,
+    "Ensemble RF\n(60m)": 0.005152331824818585
+  },
+  "best_model": "Ensemble RF\n(0h)",
+  "best_score": 0.0008526351966864651,
+  "note": "Lower Brier Score = better probabilistic calibration"
+}

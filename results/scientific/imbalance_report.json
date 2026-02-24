@@ -1,0 +1,50 @@
+{
+  "total_samples": 3932355,
+  "thresholds": [
+    {
+      "threshold_mm": 5,
+      "positive_count": 29839,
+      "negative_count": 3902516,
+      "positive_pct": 0.7588,
+      "negative_pct": 99.2412,
+      "imbalance_ratio": 130.8,
+      "naive_accuracy_pct": 99.2412,
+      "naive_csi": 0.0,
+      "naive_pod": 0.0
+    },
+    {
+      "threshold_mm": 10,
+      "positive_count": 3680,
+      "negative_count": 3928675,
+      "positive_pct": 0.0936,
+      "negative_pct": 99.9064,
+      "imbalance_ratio": 1067.6,
+      "naive_accuracy_pct": 99.9064,
+      "naive_csi": 0.0,
+      "naive_pod": 0.0
+    },
+    {
+      "threshold_mm": 20,
+      "positive_count": 267,
+      "negative_count": 3932088,
+      "positive_pct": 0.0068,
+      "negative_pct": 99.9932,
+      "imbalance_ratio": 14726.9,
+      "naive_accuracy_pct": 99.9932,
+      "naive_csi": 0.0,
+      "naive_pod": 0.0
+    }
+  ],
+  "why_accuracy_fails": {
+    "explanation": "Accuracy = (TP+TN)/(TP+TN+FP+FN). With severe class imbalance, TN dominates. A trivial model that always predicts 'No Heavy Rain' achieves >99.8% accuracy but detects zero events. We use POD, FAR, CSI, and Brier Score instead.",
+    "naive_10mm_accuracy": 99.9064,
+    "naive_10mm_pod": 0.0,
+    "naive_10mm_csi": 0.0
+  },
+  "mitigation_strategies": [
+    "class_weight='balanced' in all classifiers",
+    "Bootstrap ensemble with stratified sampling",
+    "Primary metrics: POD, FAR, CSI, PR-AUC, Brier Score",
+    "Accuracy reported in appendix only"
+  ]
+}
