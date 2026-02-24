@@ -1,0 +1,8 @@
+{
+  "baseline_mean_hazard": 0.0015627285660037335,
+  "typhoon_mean_hazard": 0.2174204953186383,
+  "typhoon_max_hazard": 0.6091676014536492,
+  "amplification_factor": 139.12876493621278,
+  "typhoon_mean_risk": 0.12295121134458499,
+  "baseline_mean_risk": 7.637517690881845e-06
+}

@@ -1,0 +1,7 @@
+{
+  "n_simulations": 100,
+  "functionality_mean": 0.9999116476244267,
+  "functionality_std": 8.99189460025356e-08,
+  "risk_mean": 8.835237557314891e-05,
+  "risk_std": 8.991894599245062e-08
+}

@@ -1,0 +1,9 @@
+{
+  "mean_graded_risk": 0.004324707815832257,
+  "max_graded_risk": 0.8309836476312067,
+  "severity_means": {
+    "minor_disruption": 0.015543264135463053,
+    "moderate_disruption": 0.003996360078804206,
+    "major_disruption": 3.429393019676493e-05
+  }
+}

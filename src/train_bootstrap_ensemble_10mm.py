@@ -1,8 +1,13 @@
 import pandas as pd
 import numpy as np
+import os
+import joblib
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, average_precision_score
 from sklearn.model_selection import train_test_split
+
+# Create output directory for saved models
+os.makedirs("models/bootstrap_models", exist_ok=True)
 
 print("Loading monsoon temporal dataset...")
 
@@ -23,12 +28,16 @@ features = [
     "rain_roll6"
 ]
 
+# Preserve spatial columns for downstream spatial joining (NOT used in training)
+spatial_cols = ["latitude", "longitude", "time"]
+
 X = df[features]
 y = df["heavy_rain"]
+X_spatial = df[spatial_cols]
 
-# Stratified split
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
+# Stratified split (split spatial cols with same indices)
+X_train, X_test, y_train, y_test, spatial_train, spatial_test = train_test_split(
+    X, y, X_spatial,
     test_size=0.2,
     random_state=42,
     stratify=y
@@ -63,6 +72,10 @@ for i in range(n_models):
 
     model.fit(X_boot, y_boot)
 
+    # Save trained model
+    model_path = f"models/bootstrap_models/rf_model_{i+1}.pkl"
+    joblib.dump(model, model_path)
+
     probs = model.predict_proba(X_test)[:, 1]
     all_probs.append(probs)
 
@@ -85,8 +98,11 @@ print("\nUncertainty statistics:")
 print("Mean prediction std:", np.mean(std_prob))
 print("Max prediction std :", np.max(std_prob))
 
-# Save uncertainty outputs
+# Save uncertainty outputs (include spatial columns for Phase 4 risk modeling)
 output_df = X_test.copy()
+output_df["latitude"] = spatial_test["latitude"].values
+output_df["longitude"] = spatial_test["longitude"].values
+output_df["time"] = spatial_test["time"].values
 output_df["true_label"] = y_test.values
 output_df["mean_probability"] = mean_prob
 output_df["uncertainty_std"] = std_prob
@@ -96,4 +112,5 @@ output_df.to_csv(
     index=False
 )
 
-print("\nEnsemble predictions saved.")
+print(f"\nEnsemble predictions saved with spatial columns.")
+print(f"Models saved to models/bootstrap_models/ ({n_models} models)")

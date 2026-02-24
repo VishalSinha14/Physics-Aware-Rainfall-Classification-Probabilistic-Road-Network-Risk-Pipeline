@@ -1,0 +1,26 @@
+{
+  "Standard Bootstrap RF": {
+    "ROC_AUC": 0.9995792584706147,
+    "Brier": 0.0009004400263869558,
+    "mean_epistemic_std": 0.00039337727171447523,
+    "max_epistemic_std": 0.3510925294378093
+  },
+  "Random Feature Subsets": {
+    "ROC_AUC": 0.999178642335078,
+    "Brier": 0.0011184010595692122,
+    "mean_epistemic_std": 0.0023589924759721817,
+    "max_epistemic_std": 0.4194245338108856
+  },
+  "Varying Hyperparameters": {
+    "ROC_AUC": 0.9995867853223299,
+    "Brier": 0.0011245315277435,
+    "mean_epistemic_std": 0.0021063904082925596,
+    "max_epistemic_std": 0.3369883136922075
+  },
+  "Mixed RF + GBM": {
+    "ROC_AUC": 0.9996614266018399,
+    "Brier": 0.0007449390220489563,
+    "mean_epistemic_std": 0.001488105896341593,
+    "max_epistemic_std": 0.49420169700676203
+  }
+}

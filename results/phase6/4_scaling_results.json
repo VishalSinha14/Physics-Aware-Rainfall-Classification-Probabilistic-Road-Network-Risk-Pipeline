@@ -1,0 +1,30 @@
+[
+  {
+    "scale_factor": 1.0,
+    "mean_hazard": 0.0029412404449062957,
+    "mean_risk": 0.0016990485469738346,
+    "high_risk_pct": 0.5,
+    "avg_functionality": 0.9983009514530262
+  },
+  {
+    "scale_factor": 1.5,
+    "mean_hazard": 0.006689706137849092,
+    "mean_risk": 0.004031641801622722,
+    "high_risk_pct": 1.16,
+    "avg_functionality": 0.9959683581983773
+  },
+  {
+    "scale_factor": 2.0,
+    "mean_hazard": 0.010718229429821055,
+    "mean_risk": 0.005685080452996937,
+    "high_risk_pct": 1.96,
+    "avg_functionality": 0.994314919547003
+  },
+  {
+    "scale_factor": 3.0,
+    "mean_hazard": 0.018944480439940743,
+    "mean_risk": 0.01068204843406173,
+    "high_risk_pct": 3.38,
+    "avg_functionality": 0.9893179515659384
+  }
+]
