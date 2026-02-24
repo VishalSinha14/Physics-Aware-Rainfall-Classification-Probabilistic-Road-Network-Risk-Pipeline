@@ -5,10 +5,17 @@ data/raw/era5_2022_06_extracted/
 data/raw/era5_2022_07_extracted/
 data/raw/era5_2022_08_extracted/
 
-# === TRAINED MODELS (7-8MB x30 = 240MB total) ===
+# === TRAINED MODELS (too large for GitHub) ===
+# Phase 3 bootstrap ensemble: 30 x ~7.8MB = ~235MB
 models/bootstrap_models/*.pkl
+# Phase 7 lead-time models: 30 x ~5MB = ~159MB
+models/leadtime/*.pkl
 
-# === CACHE (OSMnx tile cache) ===
+# === RUNTIME / SCRATCH FILES ===
+logs/
+results/baselines/test.txt
+
+# === CACHE ===
 cache/
 
 # === PYTHON ARTIFACTS ===
